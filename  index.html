@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pappu Kumar Prajapati — Analytical Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --bg:#fbfbfc;
+          --ink:#1a1c20;
+          --ink-soft:#4a4e57;
+          --muted:#8b8f99;
+          --line:#e6e7ea;
+          --line-soft:#f0f1f3;
+          --card:rgba(255,255,255,0.45);
+          --card-solid:#ffffff;
+          --on-card:var(--ink);
+          --on-card-soft:var(--ink-soft);
+          --on-card-mute:var(--muted);
+          --accent:#5b6472;
+          --accent-2:#8b929e;
+          --grad:linear-gradient(120deg,#3a3f47 0%,#6b7280 50%,#a3a8b2 100%);
+          --glow:rgba(120,128,140,0.10);
+          --done:#5b6472;
+          --active:#b0752e;
+          --wait:#b8bcc4;
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{
+          background:var(--bg);
+          color:var(--ink);
+          font-family:'Space Grotesk',system-ui,sans-serif;
+          line-height:1.6;
+          -webkit-font-smoothing:antialiased;
+          overflow-x:hidden;
+        }
+
+        /* signature celestial grid backdrop */
+        .starfield{
+          position:fixed; inset:0; z-index:0; pointer-events:none;
+          background-image:
+            radial-gradient(circle at 20% 12%, var(--glow), transparent 30%),
+            radial-gradient(circle at 82% 6%, rgba(150,155,165,0.12), transparent 26%),
+            radial-gradient(circle at 88% 46%, rgba(120,128,142,0.14), transparent 24%),
+            radial-gradient(circle at 12% 74%, rgba(130,138,152,0.14), transparent 26%),
+            radial-gradient(circle at 60% 90%, rgba(140,146,160,0.12), transparent 24%),
+            linear-gradient(var(--line-soft) 1px, transparent 1px),
+            linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+          background-size:auto, auto, auto, auto, auto, 46px 46px, 46px 46px;
+          -webkit-mask-image:linear-gradient(#000, #000);
+          mask-image:linear-gradient(#000, #000);
+          opacity:.7;
+        }
+
+        .wrap{position:relative; z-index:1; max-width:980px; margin:0 auto; padding:0 24px}
+
+        /* frosted glass surfaces */
+        .panel,.research,.stack-card,.conn{
+          backdrop-filter:blur(24px) saturate(1.3);
+          -webkit-backdrop-filter:blur(24px) saturate(1.3);
+        }
+        .chip,.learn .item,.btn.ghost{
+          backdrop-filter:blur(12px) saturate(1.4);
+          -webkit-backdrop-filter:blur(12px) saturate(1.4);
+        }
+
+        /* text on frosted boxes */
+        .panel .tag,.research h4{color:var(--accent)}
+        .step{border-top-color:var(--line-soft)}
+        .step.is-done .state{color:var(--done)}
+        .conn .v em{color:var(--accent)}
+
+        /* ---------- HERO ---------- */
+        header.hero{padding:96px 0 60px; position:relative}
+        .eyebrow{
+          font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.32em;
+          text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:12px;
+          margin-bottom:26px;
+        }
+        .eyebrow::after{content:""; flex:1; height:1px; background:var(--line)}
+        .hero h1{
+          font-family:'Fraunces',serif; font-weight:600; font-size:clamp(2.6rem,6.5vw,4.6rem);
+          line-height:1.02; letter-spacing:-.02em; margin-bottom:18px;
+        }
+        .hero h1 .grad{
+          background:var(--grad); -webkit-background-clip:text; background-clip:text;
+          -webkit-text-fill-color:transparent; color:transparent;
+        }
+        .hero h1 .wave{display:inline-block; transform-origin:70% 70%; animation:wave 2.6s ease-in-out infinite}
+        @keyframes wave{0%,60%,100%{transform:rotate(0)}10%{transform:rotate(16deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(16deg)}40%{transform:rotate(-4deg)}}
+        .roles{
+          font-family:'JetBrains Mono',monospace; font-size:.95rem; color:var(--ink-soft);
+          letter-spacing:.02em; margin-bottom:14px;
+        }
+        .roles b{color:var(--accent); font-weight:600}
+        .lede{font-size:1.18rem; color:var(--ink-soft); max-width:560px; margin-bottom:30px}
+        .lede strong{color:var(--ink); font-weight:600}
+        .links{display:flex; gap:12px; flex-wrap:wrap}
+        .btn{
+          display:inline-flex; align-items:center; gap:9px; text-decoration:none;
+          font-family:'JetBrains Mono',monospace; font-size:.82rem; font-weight:500;
+          padding:11px 18px; border-radius:11px; transition:.22s ease;
+          border:1px solid var(--line);
+        }
+        .btn.primary{background:var(--grad); color:#fff; border-color:transparent}
+        .btn.primary:hover{transform:translateY(-2px)}
+        .btn.ghost{background:rgba(255,255,255,0.55); color:var(--ink)}
+        .btn.ghost:hover{border-color:var(--accent); color:var(--accent); transform:translateY(-2px)}
+        .btn svg{width:15px; height:15px}
+
+        /* ---------- SECTIONS ---------- */
+        section{padding:44px 0; position:relative}
+        .sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:28px}
+        .sec-num{font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--accent); letter-spacing:.1em}
+        .sec-head h2{font-family:'Fraunces',serif; font-weight:600; font-size:1.9rem; letter-spacing:-.01em}
+        .sec-head .rule{flex:1; height:1px; background:var(--line); align-self:center}
+
+        p.body{color:var(--ink-soft); max-width:680px; margin-bottom:14px}
+        p.body strong{color:var(--ink); font-weight:600}
+
+        /* about focus chips */
+        .chips{display:flex; flex-wrap:wrap; gap:9px; margin-top:22px}
+        .chip{
+          font-family:'JetBrains Mono',monospace; font-size:.76rem; color:var(--ink-soft);
+          background:rgba(255,255,255,0.55); border:1px solid var(--line); padding:7px 13px; border-radius:20px;
+          transition:.2s;
+        }
+        .chip:hover{border-color:var(--accent); color:var(--accent); transform:translateY(-1px)}
+
+        /* project card + progress */
+        .panel{
+          background:var(--card); border:none; border-radius:0;
+          padding:30px 30px 26px;
+        }
+        .panel h3{font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; margin-bottom:6px}
+        .panel .tag{font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--accent); letter-spacing:.16em; text-transform:uppercase}
+        .pipeline{margin-top:24px; display:grid; gap:2px}
+        .step{display:flex; align-items:center; gap:14px; padding:11px 4px; border-top:1px solid var(--line-soft)}
+        .step:first-child{border-top:none}
+        .dot{width:9px; height:9px; border-radius:50%; flex-shrink:0}
+        .dot.done{background:var(--done); box-shadow:0 0 0 4px rgba(10,160,110,.14)}
+        .dot.active{background:var(--active); box-shadow:0 0 0 4px rgba(201,106,18,.16); animation:pulse 1.8s infinite}
+        .dot.wait{background:var(--wait)}
+        @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(201,106,18,.16)}50%{box-shadow:0 0 0 7px rgba(201,106,18,.05)}}
+        .step .label{flex:1; font-size:.98rem}
+        .step.is-wait .label{color:var(--muted)}
+        .step .state{font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase}
+        .step.is-done .state{color:var(--done)}
+        .step.is-active .state{color:var(--active)}
+        .step.is-wait .state{color:var(--wait)}
+
+        /* research */
+        .research{background:var(--card); border:none; border-radius:0; padding:30px; position:relative; overflow:hidden}
+        .research::before{
+          content:""; position:absolute; right:-60px; top:-60px; width:220px; height:220px;
+          border-radius:50%; background:radial-gradient(circle,var(--glow),transparent 70%);
+        }
+        .research h3{font-family:'Fraunces',serif; font-size:1.55rem; font-weight:600; margin-bottom:4px; position:relative}
+        .research .authors{font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--muted); margin-bottom:22px}
+        .research .grid2{display:grid; grid-template-columns:1fr 1fr; gap:24px; position:relative}
+        .research h4{font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:10px}
+        .research ul{list-style:none}
+        .research li{font-size:.94rem; color:var(--ink-soft); padding:3px 0 3px 16px; position:relative}
+        .research li::before{content:"·"; position:absolute; left:2px; color:var(--accent-2); font-weight:700}
+        .quote{
+          margin-top:24px; padding:16px 20px; border-left:3px solid var(--accent);
+          background:rgba(255,255,255,0.4); font-family:'Fraunces',serif;
+          font-style:italic; font-size:1.02rem; color:var(--ink-soft); position:relative;
+        }
+
+        /* tech stack */
+        .stack{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px}
+        .stack-card{background:var(--card); border:none; border-radius:0; padding:20px 22px; transition:.22s}
+        .stack-card:hover{transform:translateY(-3px); border-color:var(--accent)}
+        .stack-card h4{font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:13px}
+        .tags{display:flex; flex-wrap:wrap; gap:7px}
+        .t{font-size:.82rem; color:var(--ink-soft); background:rgba(255,255,255,0.5); padding:5px 11px; border-radius:8px}
+
+        /* learning row */
+        .learn{display:flex; flex-wrap:wrap; gap:10px}
+        .learn .item{
+          font-family:'Space Grotesk',sans-serif; font-size:.92rem; color:var(--ink-soft);
+          background:rgba(255,255,255,0.55); border:1px solid var(--line); border-radius:12px; padding:12px 16px;
+          display:flex; align-items:center; gap:9px;
+        }
+        .learn .item span{color:var(--accent-2)}
+        .learn .item.done span{color:#0f9d63}
+        .learn .item.next{color:var(--ink); font-weight:500}
+        .learn .item.next span{color:var(--accent)}
+
+        .next-focus{margin-top:26px; padding-top:24px; border-top:1px solid var(--line)}
+        .next-label{
+          font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.18em;
+          text-transform:uppercase; color:var(--accent);
+        }
+        .next-lead{margin:8px 0 16px; color:var(--ink-soft); font-size:1rem; max-width:520px}
+
+        /* connect */
+        .connect{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px}
+        .conn{
+          text-decoration:none; background:var(--card); border:none; border-radius:0;
+          padding:20px; display:flex; flex-direction:column; gap:4px; transition:.22s; color:var(--ink);
+        }
+        .conn:hover{transform:translateY(-3px); border-color:var(--accent)}
+        .conn .k{font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+        .conn .v{font-size:.95rem; font-weight:500; word-break:break-word}
+        .conn .v em{color:var(--accent); font-style:normal}
+
+        /* closing */
+        .closing{text-align:center; padding:70px 0 90px}
+        .closing p{
+          font-family:'Fraunces',serif; font-size:clamp(1.2rem,3vw,1.7rem); font-weight:500;
+          font-style:italic; color:var(--ink); max-width:640px; margin:0 auto; line-height:1.4;
+        }
+        .closing .mark{font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.28em; color:var(--muted); text-transform:uppercase; margin-bottom:26px}
+
+        footer{border-top:1px solid var(--line); padding:26px 0; text-align:center}
+        footer p{font-family:'JetBrains Mono',monospace; font-size:.74rem; color:var(--muted); letter-spacing:.06em}
+
+        /* reveal */
+        .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease}
+        .reveal.in{opacity:1; transform:none}
+
+        @media (max-width:640px){
+          header.hero{padding:70px 0 40px}
+          .research .grid2{grid-template-columns:1fr}
+          .sec-head h2{font-size:1.55rem}
+        }
+        @media (prefers-reduced-motion:reduce){
+          *{animation:none!important; transition:none!important}
+          .reveal{opacity:1; transform:none}
+        }
+    </style>
+</head>
+<body>
+<div class="starfield"></div>
+
+<div class="wrap">
+
+    <!-- HERO -->
+    <header class="hero reveal">
+        <div class="eyebrow">Analytical Intelligence · Eclyt</div>
+        <h1>Hi <span class="wave">👋</span>, I'm<br><span class="grad">Pappu Kumar Prajapati</span></h1>
+        <div class="roles">Founder&nbsp;·&nbsp;Researcher&nbsp;·&nbsp;Software Engineer</div>
+        <p class="lede">Building the next generation of <strong>OSA — Analytical Intelligence</strong>: systems that reason, not just respond.</p>
+        <div class="links">
+            <a class="btn primary" href="https://eclyt.com" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></svg>
+                eclyt.com
+            </a>
+            <a class="btn ghost" href="https://www.linkedin.com/in/pk-prajapati-823718108/" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11.02 5 2.5 2.5 0 01-.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.75 2.5 4.75 5.75V21H18v-5.3c0-1.27-.02-2.9-1.77-2.9s-2.05 1.38-2.05 2.8V21H10z"/></svg>
+                LinkedIn
+            </a>
+            <a class="btn ghost" href="https://github.com/workoutpk" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- ABOUT -->
+    <section class="reveal">
+        <div class="sec-head"><span class="sec-num">01</span><h2>About Me</h2><span class="rule"></span></div>
+        <p class="body">I'm an AI & Java Full-Stack Engineer working on enterprise-scale applications for <strong>UBS</strong> through <strong>Infosys</strong>.</p>
+        <p class="body">Alongside that, I'm building <strong>OSA (Analytical Intelligence)</strong> at <strong>Eclyt</strong> — a next-generation AI platform focused on reasoning, analytical intelligence, and turning complex information into actionable insight. I like combining software engineering, AI research, and mathematical thinking to solve hard real-world problems.</p>
+        <div class="chips">
+            <span class="chip">Foundation Models</span>
+            <span class="chip">LLMs</span>
+            <span class="chip">AI Agents</span>
+            <span class="chip">RAG</span>
+            <span class="chip">Information Retrieval</span>
+            <span class="chip">Deep Learning</span>
+            <span class="chip">NLP</span>
+            <span class="chip">Quantum Computing</span>
+            <span class="chip">Quantum Physics</span>
+            <span class="chip">Distributed Systems</span>
+            <span class="chip">Backend Engineering</span>
+        </div>
+    </section>
+
+    <!-- PROJECT -->
+    <section class="reveal">
+        <div class="sec-head"><span class="sec-num">02</span><h2>Current Project</h2><span class="rule"></span></div>
+        <div class="panel">
+            <span class="tag">Flagship · Eclyt</span>
+            <h3>OSA — Analytical Intelligence</h3>
+            <p class="body" style="margin-top:8px">Designed to deliver analytical reasoning beyond conventional conversational AI.</p>
+            <div class="pipeline">
+                <div class="step is-done"><span class="dot done"></span><span class="label">Dataset Collection</span><span class="state">Done</span></div>
+                <div class="step is-done"><span class="dot done"></span><span class="label">Data Cleaning &amp; Validation</span><span class="state">Done</span></div>
+                <div class="step is-done"><span class="dot done"></span><span class="label">Corpus Preparation</span><span class="state">Done</span></div>
+                <div class="step is-active"><span class="dot active"></span><span class="label">Foundation Model Training</span><span class="state">In&nbsp;Progress</span></div>
+                <div class="step is-wait"><span class="dot wait"></span><span class="label">Fine-Tuning</span><span class="state">Queued</span></div>
+                <div class="step is-wait"><span class="dot wait"></span><span class="label">Multi-Agent Intelligence</span><span class="state">Queued</span></div>
+                <div class="step is-wait"><span class="dot wait"></span><span class="label">High-Performance Inference</span><span class="state">Queued</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section class="reveal">
+        <div class="sec-head"><span class="sec-num">03</span><h2>Research</h2><span class="rule"></span></div>
+        <div class="research">
+            <span class="tag" style="font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-2)">Published Paper</span>
+            <h3>Universe Geometry &amp; Property()</h3>
+            <p class="authors">https://drive.google.com/file/d/19AwUql5Ktjsyj4ds28d1puk_IU02O-xa/view </p>
+            <div class="grid2">
+                <div>
+                    <h4>Research Areas</h4>
+                    <ul>
+                        <li>Cosmology</li>
+                        <li>Differential Geometry</li>
+                        <li>Space-Time Curvature</li>
+                        <li>Black Hole Physics</li>
+                        <li>Mathematical Physics</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Key Topics</h4>
+                    <ul>
+                        <li>Universe Geometry</li>
+                        <li>Sectional Curvature</li>
+                        <li>Massive Object Dynamics</li>
+                        <li>Black Hole Formation &amp; Evolution</li>
+                        <li>Relativistic Space-Time Models</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">Mathematical models describing the geometry of the universe, large-scale space-time curvature, black hole formation, and the dynamics of massive celestial objects.</div>
+        </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="reveal">
+        <div class="sec-head"><span class="sec-num">04</span><h2>Tech Stack</h2><span class="rule"></span></div>
+        <div class="stack">
+            <div class="stack-card">
+                <h4>Languages</h4>
+                <div class="tags"><span class="t">Java</span><span class="t">Python</span><span class="t">Kotlin</span><span class="t">JavaScript</span><span class="t">SQL</span></div>
+            </div>
+            <div class="stack-card">
+                <h4>Backend</h4>
+                <div class="tags"><span class="t">Spring Boot</span><span class="t">Quarkus</span><span class="t">FastAPI</span><span class="t">REST APIs</span></div>
+            </div>
+            <div class="stack-card">
+                <h4>AI / ML</h4>
+                <div class="tags"><span class="t">PyTorch</span><span class="t">Transformers</span><span class="t">Hugging Face</span><span class="t">LangChain</span><span class="t">RAG</span><span class="t">Sentence Transformers</span><span class="t">Tokenizers</span></div>
+            </div>
+            <div class="stack-card">
+                <h4>Frontend</h4>
+                <div class="tags"><span class="t">React</span><span class="t">HTML</span><span class="t">CSS</span></div>
+            </div>
+            <div class="stack-card">
+                <h4>Cloud &amp; DevOps</h4>
+                <div class="tags"><span class="t">Docker</span><span class="t">GitHub Actions</span><span class="t">Linux</span><span class="t">PostgreSQL</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEARNING -->
+    <section class="reveal">
+        <div class="sec-head"><span class="sec-num">05</span><h2>Already Learned</h2><span class="rule"></span></div>
+        <div class="learn">
+            <div class="item done"><span>✓</span>Training Foundation Models</div>
+            <div class="item done"><span>✓</span>Mixture of Experts (MoE)</div>
+            <div class="item done"><span>✓</span>Model Quantization</div>
+            <div class="item done"><span>✓</span>AI Infrastructure</div>
+            <div class="item done"><span>✓</span>High-Performance Inference</div>
+        </div>
+
+        <div class="next-focus">
+            <span class="next-label">Next · Research Focus</span>
+            <p class="next-lead">Turning toward the physics that underpins the next computational frontier.</p>
+            <div class="learn">
+                <div class="item next"><span>◇</span>Quantum Computing</div>
+                <div class="item next"><span>◇</span>Quantum Mechanics</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONNECT -->
+    <section class="reveal">
+        <div class="sec-head"><span class="sec-num">06</span><h2>Connect</h2><span class="rule"></span></div>
+        <div class="connect">
+            <a class="conn" href="https://eclyt.com" target="_blank" rel="noopener">
+                <span class="k">🌐 Website</span><span class="v"><em>eclyt.com</em></span>
+            </a>
+            <a class="conn" href="https://www.linkedin.com/in/pk-prajapati-823718108/" target="_blank" rel="noopener">
+                <span class="k">💼 LinkedIn</span><span class="v">pk-prajapati</span>
+            </a>
+            <a class="conn" href="https://github.com/workoutpk" target="_blank" rel="noopener">
+                <span class="k">🐙 GitHub</span><span class="v">workoutpk</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- CLOSING -->
+    <div class="closing reveal">
+        <div class="mark">— thesis —</div>
+        <p>Building intelligence that doesn't just answer questions — it understands, reasons, and transforms information into insight.</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Pappu Kumar Prajapati · Eclyt</p>
+</footer>
+
+<script>
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%3)*70+'ms'; io.observe(el); });
+</script>
+</body>
+</html>
